@@ -5,7 +5,9 @@ set -euo pipefail
 # Usage: mine.sh start ADDRESS THREADS
 #        mine.sh stop
 
-RPC="${AGENTCHAIN_RPC:-http://127.0.0.1:8545}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
+
 COMMAND="${1:?Usage: mine.sh <start|stop> [ADDRESS THREADS]}"
 
 case "$COMMAND" in
@@ -13,14 +15,9 @@ case "$COMMAND" in
     ADDRESS="${2:?Usage: mine.sh start ADDRESS THREADS}"
     THREADS="${3:-1}"
 
-    if [[ ! "$ADDRESS" =~ ^0x[0-9a-fA-F]{40}$ ]]; then
-      echo "Error: Invalid address format." >&2
-      exit 1
-    fi
+    validate_address "$ADDRESS"
 
-    RESULT=$(curl -s -X POST "$RPC" \
-      -H "Content-Type: application/json" \
-      -d "{\"jsonrpc\":\"2.0\",\"method\":\"agent_startMining\",\"params\":[\"$ADDRESS\",$THREADS],\"id\":1}")
+    RESULT=$(rpc_call "{\"jsonrpc\":\"2.0\",\"method\":\"agent_startMining\",\"params\":[\"$ADDRESS\",$THREADS],\"id\":1}")
 
     if echo "$RESULT" | grep -q '"error"'; then
       echo "Failed to start mining: $(echo "$RESULT" | grep -o '"message":"[^"]*"')" >&2
@@ -33,9 +30,7 @@ case "$COMMAND" in
     ;;
 
   stop)
-    RESULT=$(curl -s -X POST "$RPC" \
-      -H "Content-Type: application/json" \
-      -d '{"jsonrpc":"2.0","method":"agent_stopMining","params":[],"id":1}')
+    RESULT=$(rpc_call '{"jsonrpc":"2.0","method":"agent_stopMining","params":[],"id":1}')
 
     if echo "$RESULT" | grep -q '"error"'; then
       echo "Failed to stop mining: $(echo "$RESULT" | grep -o '"message":"[^"]*"')" >&2

@@ -6,14 +6,14 @@ set -euo pipefail
 # Usage: wallet.sh create
 #        wallet.sh list
 
-RPC="${AGENTCHAIN_RPC:-http://165.232.86.29:8545}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
+
 COMMAND="${1:?Usage: wallet.sh <create|list>}"
 
 case "$COMMAND" in
   create)
-    RESULT=$(curl -s -X POST "$RPC" \
-      -H "Content-Type: application/json" \
-      -d '{"jsonrpc":"2.0","method":"agent_createWallet","params":[],"id":1}')
+    RESULT=$(rpc_call '{"jsonrpc":"2.0","method":"agent_createWallet","params":[],"id":1}')
 
     if echo "$RESULT" | grep -q '"error"'; then
       echo "Failed to create wallet: $(echo "$RESULT" | grep -o '"message":"[^"]*"')" >&2
@@ -26,9 +26,7 @@ case "$COMMAND" in
     ;;
 
   list)
-    RESULT=$(curl -s -X POST "$RPC" \
-      -H "Content-Type: application/json" \
-      -d '{"jsonrpc":"2.0","method":"agent_listWallets","params":[],"id":1}')
+    RESULT=$(rpc_call '{"jsonrpc":"2.0","method":"agent_listWallets","params":[],"id":1}')
 
     if echo "$RESULT" | grep -q '"error"'; then
       echo "Failed to list wallets: $(echo "$RESULT" | grep -o '"message":"[^"]*"')" >&2

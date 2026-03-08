@@ -37,12 +37,12 @@ Keys never leave the node. All signing and account management is done through th
 |----------|-------|
 | Chain ID | 7331 |
 | Currency | CRD |
-| Public RPC | `http://165.232.86.29:8545` |
+| Public RPC | `http://165.232.86.29` |
 | Block time | ~6 seconds |
 | Consensus | RandomX Proof-of-Work |
 | Block reward | 2 CRD |
 
-The default RPC endpoint is `http://165.232.86.29:8545`. Override with the `AGENTCHAIN_RPC` environment variable for a local node (e.g. `http://127.0.0.1:8545`).
+The default RPC endpoint is `http://165.232.86.29`. Override with the `AGENTCHAIN_RPC` environment variable for a local node (e.g. `http://127.0.0.1:8545`).
 
 ### Available Commands
 
@@ -51,7 +51,7 @@ All commands use JSON-RPC over HTTP. Use curl to make calls.
 #### Check Balance
 
 ```bash
-curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29:8545}" \
+curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29}" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"agent_getBalance","params":["ADDRESS"],"id":1}'
 ```
@@ -61,7 +61,7 @@ Returns the balance in wei (hex). Convert to CRD by dividing by 10^18.
 You can also use the standard `eth_getBalance`:
 
 ```bash
-curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29:8545}" \
+curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29}" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"eth_getBalance","params":["ADDRESS","latest"],"id":1}'
 ```
@@ -71,7 +71,7 @@ curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29:8545}" \
 Use `agent_send` — the node signs internally, no keys are exposed:
 
 ```bash
-curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29:8545}" \
+curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29}" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"agent_send","params":["SENDER","RECIPIENT","VALUE_IN_HEX_WEI"],"id":1}'
 ```
@@ -81,7 +81,7 @@ To convert CRD to wei hex: multiply CRD amount by 10^18, then convert to hex wit
 #### Create a New Wallet
 
 ```bash
-curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29:8545}" \
+curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29}" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"agent_createWallet","params":[],"id":1}'
 ```
@@ -91,7 +91,7 @@ Returns the new wallet address. No password needed — keys are managed securely
 #### List Wallets
 
 ```bash
-curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29:8545}" \
+curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29}" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"agent_listWallets","params":[],"id":1}'
 ```
@@ -99,7 +99,7 @@ curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29:8545}" \
 #### Get Current Block Number
 
 ```bash
-curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29:8545}" \
+curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29}" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
 ```
@@ -107,7 +107,7 @@ curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29:8545}" \
 #### Get Peer Count
 
 ```bash
-curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29:8545}" \
+curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29}" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":1}'
 ```
@@ -133,7 +133,7 @@ curl -s -X POST "${AGENTCHAIN_RPC:-http://127.0.0.1:8545}" \
 #### Get Mining Status
 
 ```bash
-curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29:8545}" \
+curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29}" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"eth_mining","params":[],"id":1}'
 ```
@@ -141,7 +141,7 @@ curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29:8545}" \
 #### Get Hashrate
 
 ```bash
-curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29:8545}" \
+curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29}" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"eth_hashrate","params":[],"id":1}'
 ```
@@ -159,7 +159,7 @@ Returns the transaction hash. Use `agent_getTransactionReceipt` to get the deplo
 #### Call Contract
 
 ```bash
-curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29:8545}" \
+curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29}" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"agent_callContract","params":["TO_CONTRACT","ABI_ENCODED_DATA"],"id":1}'
 ```
@@ -167,7 +167,7 @@ curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29:8545}" \
 #### Get Transaction Receipt
 
 ```bash
-curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29:8545}" \
+curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29}" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"agent_getTransactionReceipt","params":["TX_HASH"],"id":1}'
 ```
@@ -211,6 +211,7 @@ The `scripts/` directory contains helper scripts:
 - **`scripts/mine.sh start ADDRESS THREADS`** — Start mining
 - **`scripts/mine.sh stop`** — Stop mining
 - **`scripts/snapshot.sh [DATADIR]`** — Download chain snapshot for fast sync
+- **`scripts/health.sh`** — Health check (exit 0 = healthy, exit 1 = unhealthy)
 
 ### Usage Patterns
 
@@ -236,7 +237,7 @@ If the agent has access to a local AgentChain node:
 
 - Always confirm with the user before sending CRD or creating wallets.
 - Never log or display private keys in output.
-- Use the public RPC (`http://165.232.86.29:8545`) for read operations by default.
+- Use the public RPC (`http://165.232.86.29`) for read operations by default.
 - Mining, wallet creation, and sending require a local node — these will fail on the public RPC.
 - All hex values from the RPC are prefixed with `0x`. Parse them as hexadecimal.
 - 1 CRD = 10^18 wei (same as ETH/wei relationship).
@@ -246,6 +247,6 @@ If the agent has access to a local AgentChain node:
 
 - Keys never leave the node. All signing happens internally via the `agent_*` API.
 - No passwords are needed — wallet management is handled securely by the node.
-- This skill only communicates with the AgentChain RPC endpoint (default: `http://165.232.86.29:8545` or user-configured `AGENTCHAIN_RPC`).
+- This skill only communicates with the AgentChain RPC endpoint (default: `http://165.232.86.29` or user-configured `AGENTCHAIN_RPC`).
 - No data is sent to any third-party service.
 - Scripts use `set -euo pipefail` for safe execution.

@@ -10,6 +10,7 @@ set -euo pipefail
 
 SNAPSHOT_META="http://165.232.86.29/snapshot/snapshot.json"
 SNAPSHOT_URL="http://165.232.86.29/snapshot/chaindata-latest.tar.gz"
+RPC="${AGENTCHAIN_RPC:-http://165.232.86.29}"
 
 # Default data directory per platform
 if [ -n "${AGENTCHAIN_DATADIR:-}" ]; then

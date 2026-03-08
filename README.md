@@ -53,7 +53,7 @@ Set the `AGENTCHAIN_RPC` environment variable to point to your node:
 export AGENTCHAIN_RPC=http://127.0.0.1:8545
 ```
 
-If not set, the public RPC (`http://165.232.86.29:8545`) is used for read operations.
+If not set, the public RPC (`http://165.232.86.29`) is used for read operations.
 
 ## Helper Scripts
 
@@ -67,6 +67,7 @@ If not set, the public RPC (`http://165.232.86.29:8545`) is used for read operat
 | `scripts/mine.sh start ADDRESS THREADS` | Start mining |
 | `scripts/mine.sh stop` | Stop mining |
 | `scripts/snapshot.sh [DATADIR]` | Download chain snapshot (fast sync) |
+| `scripts/health.sh` | Health check (exit 0/1) |
 
 ## Links
 

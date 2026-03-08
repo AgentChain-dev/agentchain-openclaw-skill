@@ -4,25 +4,15 @@ set -euo pipefail
 # Show AgentChain network status
 # Usage: status.sh
 
-RPC="${AGENTCHAIN_RPC:-http://165.232.86.29:8545}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
 
-# Fetch all status info in parallel
-BLOCK=$(curl -s -X POST "$RPC" -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}')
+BLOCK=$(rpc_call '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}')
+PEERS=$(rpc_call '{"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":1}')
+MINING=$(rpc_call '{"jsonrpc":"2.0","method":"eth_mining","params":[],"id":1}')
+HASHRATE=$(rpc_call '{"jsonrpc":"2.0","method":"eth_hashrate","params":[],"id":1}')
+SYNCING=$(rpc_call '{"jsonrpc":"2.0","method":"eth_syncing","params":[],"id":1}')
 
-PEERS=$(curl -s -X POST "$RPC" -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":1}')
-
-MINING=$(curl -s -X POST "$RPC" -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"eth_mining","params":[],"id":1}')
-
-HASHRATE=$(curl -s -X POST "$RPC" -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"eth_hashrate","params":[],"id":1}')
-
-SYNCING=$(curl -s -X POST "$RPC" -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"eth_syncing","params":[],"id":1}')
-
-# Parse values
 BLOCK_HEX=$(echo "$BLOCK" | grep -o '"result":"[^"]*"' | cut -d'"' -f4)
 BLOCK_NUM=$(printf "%d" "$BLOCK_HEX" 2>/dev/null || echo "0")
 

@@ -66,6 +66,7 @@ If not set, the public RPC (`http://165.232.86.29:8545`) is used for read operat
 | `scripts/wallet.sh list` | List all wallets |
 | `scripts/mine.sh start ADDRESS THREADS` | Start mining |
 | `scripts/mine.sh stop` | Stop mining |
+| `scripts/snapshot.sh [DATADIR]` | Download chain snapshot (fast sync) |
 
 ## Links
 

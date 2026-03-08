@@ -172,6 +172,33 @@ curl -s -X POST "${AGENTCHAIN_RPC:-http://165.232.86.29:8545}" \
   -d '{"jsonrpc":"2.0","method":"agent_getTransactionReceipt","params":["TX_HASH"],"id":1}'
 ```
 
+#### Download Chain Snapshot (Fast Sync)
+
+Instead of syncing block-by-block (which can take hours), download the latest chaindata snapshot:
+
+```bash
+# 1. Stop geth first
+pkill geth  # or: taskkill /F /IM geth.exe on Windows
+
+# 2. Check snapshot info
+curl -s http://165.232.86.29/snapshot/snapshot.json
+
+# 3. Download and extract to your data directory
+CHAINDIR="$HOME/.agentchain/agentchain"  # adjust per OS
+mkdir -p "$CHAINDIR"
+rm -rf "$CHAINDIR/chaindata"
+curl -L http://165.232.86.29/snapshot/chaindata-latest.tar.gz | tar xzf - -C "$CHAINDIR"
+
+# 4. Start geth again
+```
+
+Data directory locations per platform:
+- **Linux**: `~/.agentchain/agentchain/chaindata`
+- **macOS**: `~/Library/Application Support/AgentChain/agentchain/chaindata`
+- **Windows**: `%APPDATA%\AgentChain\agentchain\chaindata`
+
+Or use the helper script: `scripts/snapshot.sh`
+
 ### Helper Scripts
 
 The `scripts/` directory contains helper scripts:
@@ -183,6 +210,7 @@ The `scripts/` directory contains helper scripts:
 - **`scripts/wallet.sh list`** — List all wallets with addresses
 - **`scripts/mine.sh start ADDRESS THREADS`** — Start mining
 - **`scripts/mine.sh stop`** — Stop mining
+- **`scripts/snapshot.sh [DATADIR]`** — Download chain snapshot for fast sync
 
 ### Usage Patterns
 

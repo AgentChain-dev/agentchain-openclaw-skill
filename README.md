@@ -4,14 +4,14 @@ An [OpenClaw](https://github.com/openclaw-ai/openclaw) skill that lets AI agents
 
 ## What is AgentChain?
 
-AgentChain is a purpose-built blockchain for AI agent economies. It uses RandomX proof-of-work (CPU-mineable) and supports agent-to-agent payments in **CRD** tokens.
+AgentChain is a purpose-built blockchain for AI agent economies. It uses RandomX proof-of-work (CPU-mineable) and supports agent-to-agent payments in **CRD** tokens. Keys never leave the node — all signing is done internally via the `agent_*` API.
 
 | Property | Value |
 |----------|-------|
 | Chain ID | 7331 |
 | Currency | CRD |
 | Consensus | RandomX PoW |
-| Block time | ~15 seconds |
+| Block time | ~6 seconds |
 | Block reward | 2 CRD |
 
 ## Installation
@@ -33,15 +33,17 @@ git clone https://github.com/AgentChain-dev/agentchain-openclaw-skill.git ~/.ope
 ## What Can Agents Do?
 
 - **Check balances** — Query any address for its CRD balance
-- **Send CRD** — Transfer tokens between accounts (agent-to-agent payments)
-- **Create wallets** — Generate new addresses on the fly
+- **Send CRD** — Transfer tokens between accounts (no passwords needed)
+- **Create wallets** — Generate new addresses on the fly (keys stay in node)
+- **Deploy contracts** — Deploy smart contracts to the chain
+- **Call contracts** — Interact with deployed contracts
 - **Mine CRD** — Earn tokens by contributing CPU power (local node required)
 - **Monitor network** — Check block height, peers, sync status, hashrate
 
 ## Requirements
 
 - `curl` (available on all major platforms)
-- Optional: A local AgentChain node (`geth`) for mining and wallet management
+- Optional: A local AgentChain node (`geth`) for mining, wallet creation, and sending
 
 ## Configuration
 
@@ -58,10 +60,10 @@ If not set, the public RPC (`http://165.232.86.29:8545`) is used for read operat
 | Script | Description |
 |--------|-------------|
 | `scripts/balance.sh ADDRESS` | Get CRD balance (human-readable) |
-| `scripts/send.sh FROM TO AMOUNT PASSWORD` | Send CRD between accounts |
+| `scripts/send.sh FROM TO AMOUNT` | Send CRD (no password needed) |
 | `scripts/status.sh` | Show network status |
-| `scripts/wallet.sh create PASSWORD` | Create a new wallet |
-| `scripts/wallet.sh list` | List all accounts |
+| `scripts/wallet.sh create` | Create a new wallet |
+| `scripts/wallet.sh list` | List all wallets |
 | `scripts/mine.sh start ADDRESS THREADS` | Start mining |
 | `scripts/mine.sh stop` | Stop mining |
 

@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Send CRD between accounts
-# Usage: send.sh FROM TO AMOUNT_CRD PASSWORD
+# Send CRD between accounts using agent_send (no passwords, keys stay in node)
+# Usage: send.sh FROM TO AMOUNT_CRD
 
 RPC="${AGENTCHAIN_RPC:-http://165.232.86.29:8545}"
-FROM="${1:?Usage: send.sh FROM TO AMOUNT_CRD PASSWORD}"
-TO="${2:?Usage: send.sh FROM TO AMOUNT_CRD PASSWORD}"
-AMOUNT="${3:?Usage: send.sh FROM TO AMOUNT_CRD PASSWORD}"
-PASSWORD="${4:?Usage: send.sh FROM TO AMOUNT_CRD PASSWORD}"
+FROM="${1:?Usage: send.sh FROM TO AMOUNT_CRD}"
+TO="${2:?Usage: send.sh FROM TO AMOUNT_CRD}"
+AMOUNT="${3:?Usage: send.sh FROM TO AMOUNT_CRD}"
 
 # Validate addresses
 for ADDR in "$FROM" "$TO"; do
@@ -22,20 +21,10 @@ done
 WEI=$(awk "BEGIN { printf \"%.0f\", $AMOUNT * 1000000000000000000 }")
 HEX_WEI=$(printf "0x%x" "$WEI")
 
-# Unlock account (300 second duration)
-UNLOCK=$(curl -s -X POST "$RPC" \
-  -H "Content-Type: application/json" \
-  -d "{\"jsonrpc\":\"2.0\",\"method\":\"personal_unlockAccount\",\"params\":[\"$FROM\",\"$PASSWORD\",300],\"id\":1}")
-
-if echo "$UNLOCK" | grep -q '"error"'; then
-  echo "Failed to unlock account: $(echo "$UNLOCK" | grep -o '"message":"[^"]*"')" >&2
-  exit 1
-fi
-
-# Send transaction
+# Send via agent_send — the node signs internally, no keys are exposed
 RESULT=$(curl -s -X POST "$RPC" \
   -H "Content-Type: application/json" \
-  -d "{\"jsonrpc\":\"2.0\",\"method\":\"eth_sendTransaction\",\"params\":[{\"from\":\"$FROM\",\"to\":\"$TO\",\"value\":\"$HEX_WEI\"}],\"id\":1}")
+  -d "{\"jsonrpc\":\"2.0\",\"method\":\"agent_send\",\"params\":[\"$FROM\",\"$TO\",\"$HEX_WEI\"],\"id\":1}")
 
 if echo "$RESULT" | grep -q '"error"'; then
   echo "Transaction failed: $(echo "$RESULT" | grep -o '"message":"[^"]*"')" >&2
